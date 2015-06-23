@@ -12,31 +12,12 @@ end
 
 get "/tweets.css" do
   content_type "text/css"
-  code = 
-  "@media screen and (-webkit-min-device-pixel-ratio: 0) {
-
-  .tweet .copy:before {
-    white-space: pre-wrap;
-  }
-  <% tweets = twitter.search(ENV.fetch(\"TWITTER_SEARCH_STRING\")) %>
-  <% tweets.take(6).map.with_index do |tweet, i| %>
-    #<%= \"tweet\" %>-<%=i+1%> .copy::before { content: \"<%= tweet.text %>\" ;
-    } 
-
-    #<%= \"tweet\" %>-<%=i+1%> .avatar { background: url(\"<%= tweet.user.profile_image_url %>\") ;
-    } 
-
-    #<%= \"tweet\" %>-<%=i+1%> .name::before { content: \"<%= tweet.user.name %>\" ;
-    } 
-
-    #<%= \"tweet\" %>-<%=i+1%> .handle::after { content: \"@<%= tweet.user.screen_name %>\" ;
-    } 
-
-    #<%= \"tweet\" %>-<%=i+1%> .timestamp::after { content: \"<%= tweet.created_at %>\" ;
-    }
-  <% end %>
-
-  }"
-
-  erb code
+  tweets = twitter.search(ENV.fetch("TWITTER_SEARCH_STRING"))
+  tweets.take(15).map.with_index do |tweet, i|
+    <<-CSS
+      #tweet-#{i + 1} .copy {
+        content: "#{tweet.text}";
+      }
+    CSS
+  end
 end
